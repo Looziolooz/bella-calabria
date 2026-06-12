@@ -94,7 +94,7 @@ export default function HeroCarousel() {
       gsap.set([".progress-sub-container", ".progress-sub-background"], {
         width: progressWidth,
       });
-      gsap.set("nav", { y: -200, opacity: 0 });
+      gsap.set(".site-header", { y: -200, opacity: 0 });
 
       gsap.set(getCard(active), {
         x: 0,
@@ -166,7 +166,7 @@ export default function HeroCarousel() {
         });
       });
       gsap.to("#pagination", { y: 0, opacity: 1, ease, delay: startDelay });
-      gsap.to("nav", { y: 0, opacity: 1, ease, delay: startDelay });
+      gsap.to(".site-header", { y: 0, opacity: 1, ease, delay: startDelay });
       gsap.to(detailsActive, { opacity: 1, x: 0, ease, delay: startDelay });
     }
 
@@ -302,7 +302,7 @@ export default function HeroCarousel() {
           ".indicator",
           ".progress-sub-foreground",
           "#pagination",
-          "nav",
+          ".site-header",
           ".details",
           ".details .text",
           ".details .title-1",
@@ -333,7 +333,7 @@ export default function HeroCarousel() {
         ".indicator",
         ".progress-sub-foreground",
         "#pagination",
-        "nav",
+        ".site-header",
         ".details",
         ".cover",
       ]);

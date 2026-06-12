@@ -1,4 +1,4 @@
-import Nav from "@/components/Nav";
+import SiteHeader from "@/components/SiteHeader";
 import SmoothScroll from "@/components/SmoothScroll";
 import HeroCarousel from "@/components/HeroCarousel";
 import TravelDiary from "@/components/TravelDiary";
@@ -8,7 +8,7 @@ export default function Home() {
   return (
     <main>
       <SmoothScroll />
-      <Nav />
+      <SiteHeader />
       <HeroCarousel />
       <TravelDiary />
       <BimGrid />

@@ -42,23 +42,23 @@ export default function TravelDiary() {
         const per = holdStart / N;
         const W = window.innerWidth;
         const H = window.innerHeight;
-        const arcScale = 0.5;
-        const cardW = 250 * arcScale;
-        const cardH = 320 * arcScale;
+        const cardScale = W < 700 ? 0.62 : 0.7; // bigger polaroids
+        const cardW = 250 * cardScale;
+        const cardH = 320 * cardScale;
         const cols = W < 700 ? 3 : 4;
         const rows = Math.ceil(N / cols);
-        const spreadXh = Math.max(70, W / 2 - cardW / 2 - 22);
-        const spreadYh = Math.max(70, H / 2 - cardH / 2 - 70);
+        const cellW = Math.max(120, (W - cardW - 24) / cols);
+        const cellH = Math.max(120, (H - cardH - 110) / rows);
 
         cards.forEach((card, i) => {
           const col = i % cols;
           const row = Math.floor(i / cols);
-          const xFrac = cols > 1 ? col / (cols - 1) - 0.5 : 0;
-          const yFrac = rows > 1 ? row / (rows - 1) - 0.5 : 0;
-          // scattered across the whole section + per-card jitter
-          const targetX = xFrac * 2 * spreadXh + scatterX[i] * W * 0.04;
-          const targetY = yFrac * 2 * spreadYh + scatterY[i] * H * 0.05;
-          const targetRot = jitter[i];
+          const centerX = (col - (cols - 1) / 2) * cellW;
+          const centerY = (row - (rows - 1) / 2) * cellH;
+          // big random offset within each cell → casually scattered, not lined up
+          const targetX = centerX + scatterX[i] * cellW * 0.45;
+          const targetY = centerY + scatterY[i] * cellH * 0.45;
+          const targetRot = jitter[i] * 1.7;
 
           let cp = (progress - i * per) / per;
           cp = Math.max(0, Math.min(1, cp));
@@ -67,7 +67,7 @@ export default function TravelDiary() {
             x: targetX * cp,
             y: H * (1 - cp) + targetY * cp,
             rotation: targetRot * cp,
-            scale: 1 + (arcScale - 1) * cp,
+            scale: 1 + (cardScale - 1) * cp,
             zIndex: i + 1,
           });
         });
