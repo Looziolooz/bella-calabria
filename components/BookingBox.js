@@ -1,12 +1,14 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { addBooking } from "@/lib/bookingStore";
 
-export default function BookingBox({ price, rating, reviews, maxGuests }) {
+export default function BookingBox({ price, rating, reviews, maxGuests, stayName, location }) {
   const [checkIn, setCheckIn] = useState("");
   const [checkOut, setCheckOut] = useState("");
   const [guests, setGuests] = useState(2);
-  const [confirmed, setConfirmed] = useState(false);
+  const [guestName, setGuestName] = useState("");
+  const [confirmedId, setConfirmedId] = useState("");
 
   const nights = useMemo(() => {
     if (!checkIn || !checkOut) return 0;
@@ -19,6 +21,22 @@ export default function BookingBox({ price, rating, reviews, maxGuests }) {
   const cleaning = 45;
   const serviceFee = nights ? Math.round(nights * price * 0.1) : 0;
   const total = nights ? nights * price + cleaning + serviceFee : 0;
+
+  function handleBook() {
+    const saved = addBooking({
+      guest: guestName.trim() || "Ospite demo",
+      stay: stayName,
+      location,
+      checkIn,
+      checkOut,
+      nights,
+      guests,
+      total,
+      status: "In attesa",
+      type: "stay",
+    });
+    setConfirmedId(saved.id);
+  }
 
   return (
     <div className="rounded-2xl border border-white/12 bg-white/5 p-5 shadow-xl">
@@ -65,14 +83,24 @@ export default function BookingBox({ price, rating, reviews, maxGuests }) {
             ))}
           </select>
         </label>
+        <label className="col-span-2 border-t border-white/15 p-3">
+          <span className="block text-[11px] font-semibold uppercase tracking-wide text-white/50">Nome (facoltativo)</span>
+          <input
+            type="text"
+            value={guestName}
+            onChange={(e) => setGuestName(e.target.value)}
+            placeholder="Ospite demo"
+            className="mt-1 w-full bg-transparent text-sm text-white outline-none placeholder:text-white/40"
+          />
+        </label>
       </div>
 
       <button
-        onClick={() => setConfirmed(true)}
-        disabled={!nights}
+        onClick={handleBook}
+        disabled={!nights || !!confirmedId}
         className="mt-4 w-full rounded-xl bg-gold py-3 text-sm font-semibold uppercase tracking-wide text-ink transition enabled:hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-40"
       >
-        {nights ? "Prenota" : "Scegli le date"}
+        {confirmedId ? "Prenotato" : nights ? "Prenota" : "Scegli le date"}
       </button>
 
       {nights > 0 && (
@@ -96,9 +124,10 @@ export default function BookingBox({ price, rating, reviews, maxGuests }) {
         </div>
       )}
 
-      {confirmed && nights > 0 && (
+      {confirmedId && nights > 0 && (
         <div className="mt-4 rounded-xl border border-gold/40 bg-gold/10 p-3 text-sm text-white">
-          ✓ Richiesta inviata! Ti contatteremo per confermare {nights} notti per{" "}
+          ✓ Richiesta inviata · codice <span className="font-semibold text-gold">{confirmedId}</span>.{" "}
+          Ti contatteremo per confermare {nights} notti per{" "}
           {guests} {guests === 1 ? "ospite" : "ospiti"}. <span className="text-white/60">(demo)</span>
         </div>
       )}

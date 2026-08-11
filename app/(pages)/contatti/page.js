@@ -1,14 +1,14 @@
 import ContactForm from "@/components/ContactForm";
 
 export const metadata = {
-  title: "Contatti · Bella Calabria",
+  title: "Contatti · Calabria Escapes",
   description: "Scrivici per organizzare la tua vacanza in Calabria.",
 };
 
 const CONTACTS = [
   { label: "Indirizzo", value: "Lungomare Falcomatà, 89125 Reggio Calabria" },
   { label: "Telefono", value: "+39 0965 000 000" },
-  { label: "Email", value: "ciao@bellacalabria.it" },
+  { label: "Email", value: "ciao@calabriaescapes.com" },
   { label: "Orari", value: "Lun–Sab, 9:00–19:00" },
 ];
 

@@ -1,7 +1,7 @@
 import AdminDashboard from "@/components/AdminDashboard";
 
 export const metadata = {
-  title: "Admin · Bella Calabria",
+  title: "Admin · Calabria Escapes",
   robots: { index: false, follow: false },
 };
 

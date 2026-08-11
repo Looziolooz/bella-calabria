@@ -6,7 +6,7 @@ export default function Footer() {
       <div className="mx-auto grid max-w-7xl grid-cols-2 gap-8 px-4 py-12 md:grid-cols-4 md:px-8">
         <div className="col-span-2 md:col-span-1">
           <div className="mb-3 text-lg font-semibold uppercase tracking-wide text-white">
-            Bella Calabria
+            Calabria Escapes
           </div>
           <p className="text-sm leading-relaxed">
             Vacanze, alloggi e voli per scoprire la punta più bella d'Italia: mare,
@@ -36,12 +36,12 @@ export default function Footer() {
           <ul className="space-y-2 text-sm">
             <li>Lungomare Falcomatà, Reggio Calabria</li>
             <li>+39 0965 000 000</li>
-            <li>ciao@bellacalabria.it</li>
+            <li>ciao@calabriaescapes.com</li>
           </ul>
         </div>
       </div>
       <div className="border-t border-white/10 px-4 py-5 text-center text-xs text-white/40 md:px-8">
-        © 2026 Bella Calabria · Demo dimostrativa · Foto: Wikimedia Commons
+        looz.desing © 2026 Calabria Escapes · Demo dimostrativa · Foto: Wikimedia Commons
       </div>
     </footer>
   );

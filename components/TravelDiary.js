@@ -111,7 +111,7 @@ export default function TravelDiary() {
 
       <div className="flex min-h-[78vh] flex-col items-center justify-center px-6 pb-[70px] pt-[120px] text-center">
         <p className="mb-4 text-xs font-semibold uppercase tracking-[3px] text-gold">
-          Bella Calabria
+          Calabria Escapes
         </p>
         <h2 className="m-0 font-display text-[clamp(34px,8.5vw,88px)] font-semibold uppercase leading-none">
           La Calabria ti aspetta

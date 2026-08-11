@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { airports, originCities, flightsByAirport } from "@/lib/flights";
+import { addBooking } from "@/lib/bookingStore";
 
 export default function FlightSearch() {
   const [origin, setOrigin] = useState("Milano");
@@ -9,6 +10,23 @@ export default function FlightSearch() {
   const [date, setDate] = useState("");
   const [pax, setPax] = useState(1);
   const [searched, setSearched] = useState(false);
+  const [booked, setBooked] = useState({});
+
+  function handleBook(f, i) {
+    const saved = addBooking({
+      guest: "Ospite demo",
+      stay: `Volo ${f.airline} ${f.from} → ${destName}`,
+      location: destName,
+      checkIn: date || "",
+      checkOut: "",
+      nights: 0,
+      guests: pax,
+      total: f.price * pax,
+      status: "In attesa",
+      type: "flight",
+    });
+    setBooked((prev) => ({ ...prev, [i]: saved.id }));
+  }
 
   const all = flightsByAirport[dest] || [];
   const results = all.filter((f) =>
@@ -105,6 +123,20 @@ export default function FlightSearch() {
                 <div className="text-right">
                   <div className="text-xl font-semibold">€{f.price * pax}</div>
                   <div className="text-xs text-white/50">{pax} pax · andata</div>
+                </div>
+                <div className="w-full text-right sm:w-auto">
+                  {booked[i] ? (
+                    <div className="rounded-lg border border-emerald-500/30 bg-emerald-500/15 px-3 py-2 text-xs font-semibold text-emerald-300">
+                      Prenotato ✓ · {booked[i]}
+                    </div>
+                  ) : (
+                    <button
+                      onClick={() => handleBook(f, i)}
+                      className="rounded-lg bg-gold px-4 py-2 text-xs font-semibold uppercase tracking-wide text-ink transition enabled:hover:-translate-y-0.5"
+                    >
+                      Prenota
+                    </button>
+                  )}
                 </div>
               </div>
             ))}

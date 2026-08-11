@@ -2,7 +2,7 @@ import Link from "next/link";
 import { offers } from "@/lib/offers";
 
 export const metadata = {
-  title: "Offerte Calabria · Bella Calabria",
+  title: "Offerte Calabria · Calabria Escapes",
   description: "Pacchetti vacanza scontati in Calabria: mare, montagna e borghi.",
 };
 

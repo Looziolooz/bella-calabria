@@ -21,7 +21,7 @@ const caveat = Caveat({
 });
 
 export const metadata = {
-  title: "Bella Calabria · Viaggio tra i luoghi più belli di Calabria",
+  title: "Calabria Escapes · Viaggio tra i luoghi più belli di Calabria",
   description:
     "Tropea, Scilla, la Sila, l'Aspromonte, i Bronzi di Riace e i sapori di Calabria — in un'esperienza scroll animata.",
 };

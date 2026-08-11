@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { stays } from "@/lib/stays";
 import { offers } from "@/lib/offers";
-import { bookings } from "@/lib/bookings";
+import { getAllBookings, updateStoredBooking } from "@/lib/bookingStore";
 
 const AUTH_KEY = "bc_admin_auth";
 const ADMIN_USER = "admin";
@@ -31,6 +31,15 @@ function StatusBadge({ status }) {
   );
 }
 
+function TypeBadge({ type }) {
+  const isFlight = type === "flight";
+  return (
+    <span className={`rounded-full border px-2.5 py-0.5 text-xs font-medium ${isFlight ? "border-sky-500/30 bg-sky-500/15 text-sky-300" : "border-gold/30 bg-gold/10 text-gold"}`}>
+      {isFlight ? "Volo" : "Soggiorno"}
+    </span>
+  );
+}
+
 function Kpi({ label, value, sub }) {
   return (
     <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
@@ -51,6 +60,7 @@ export default function AdminDashboard() {
   const [listings, setListings] = useState(() =>
     stays.map((s) => ({ ...s, active: true }))
   );
+  const [allBookings, setAllBookings] = useState([]);
 
   useEffect(() => {
     try {
@@ -58,6 +68,19 @@ export default function AdminDashboard() {
     } catch {}
     setReady(true);
   }, []);
+
+  useEffect(() => {
+    setAllBookings(getAllBookings());
+    const refresh = () => setAllBookings(getAllBookings());
+    window.addEventListener("ce-bookings-changed", refresh);
+    window.addEventListener("storage", refresh);
+    return () => {
+      window.removeEventListener("ce-bookings-changed", refresh);
+      window.removeEventListener("storage", refresh);
+    };
+  }, []);
+
+  const isStored = (id) => parseInt(String(id).replace(/^BC-/, ""), 10) >= 3000;
 
   function login(e) {
     e.preventDefault();
@@ -82,16 +105,16 @@ export default function AdminDashboard() {
   }
 
   const kpis = useMemo(() => {
-    const revenue = bookings
+    const revenue = allBookings
       .filter((b) => b.status === "Confermata" || b.status === "Completata")
       .reduce((s, b) => s + b.total, 0);
-    const pending = bookings.filter((b) => b.status === "In attesa").length;
+    const pending = allBookings.filter((b) => b.status === "In attesa").length;
     const avgRating = (
       stays.reduce((s, x) => s + x.rating, 0) / stays.length
     ).toFixed(2);
     const activeListings = listings.filter((l) => l.active).length;
     return { revenue, pending, avgRating, activeListings };
-  }, [listings]);
+  }, [listings, allBookings]);
 
   function toggleActive(slug) {
     setListings((prev) =>
@@ -110,7 +133,7 @@ export default function AdminDashboard() {
           className="w-full max-w-sm rounded-2xl border border-white/10 bg-white/5 p-7"
         >
           <div className="mb-1 text-xs font-semibold uppercase tracking-[3px] text-gold">
-            Bella Calabria
+            Calabria Escapes
           </div>
           <h1 className="text-2xl font-semibold">Area amministratore</h1>
           <p className="mt-1 text-sm text-white/50">Accedi per gestire il portale.</p>
@@ -166,7 +189,7 @@ export default function AdminDashboard() {
               B
             </span>
             <span className="text-sm font-semibold uppercase tracking-wide">
-              Bella Calabria <span className="text-white/40">· Admin</span>
+              Calabria Escapes <span className="text-white/40">· Admin</span>
             </span>
           </div>
           <div className="flex items-center gap-2">
@@ -207,7 +230,7 @@ export default function AdminDashboard() {
             <h2 className="text-xl font-semibold">Panoramica</h2>
             <div className="mt-4 grid grid-cols-2 gap-4 lg:grid-cols-4">
               <Kpi label="Alloggi attivi" value={kpis.activeListings} sub={`su ${stays.length} totali`} />
-              <Kpi label="Prenotazioni" value={bookings.length} sub={`${kpis.pending} in attesa`} />
+              <Kpi label="Prenotazioni" value={allBookings.length} sub={`${kpis.pending} in attesa`} />
               <Kpi label="Ricavi" value={`€${kpis.revenue.toLocaleString("it-IT")}`} sub="confermati + completati" />
               <Kpi label="Rating medio" value={`★ ${kpis.avgRating}`} sub="su tutti gli alloggi" />
             </div>
@@ -226,7 +249,7 @@ export default function AdminDashboard() {
                   </tr>
                 </thead>
                 <tbody>
-                  {bookings.slice(0, 5).map((b) => (
+                  {allBookings.slice(0, 5).map((b) => (
                     <tr key={b.id} className="border-t border-white/5">
                       <td className="px-4 py-3 font-mono text-white/60">{b.id}</td>
                       <td className="px-4 py-3">{b.guest}</td>
@@ -298,10 +321,11 @@ export default function AdminDashboard() {
           <section>
             <h2 className="text-xl font-semibold">Prenotazioni</h2>
             <div className="mt-4 overflow-x-auto rounded-2xl border border-white/10">
-              <table className="w-full min-w-[820px] text-left text-sm">
+              <table className="w-full min-w-[980px] text-left text-sm">
                 <thead className="bg-white/5 text-xs uppercase tracking-wider text-white/50">
                   <tr>
                     <th className="px-4 py-3">ID</th>
+                    <th className="px-4 py-3">Tipo</th>
                     <th className="px-4 py-3">Ospite</th>
                     <th className="px-4 py-3">Alloggio</th>
                     <th className="px-4 py-3">Check-in</th>
@@ -309,19 +333,41 @@ export default function AdminDashboard() {
                     <th className="px-4 py-3">Ospiti</th>
                     <th className="px-4 py-3">Totale</th>
                     <th className="px-4 py-3">Stato</th>
+                    <th className="px-4 py-3">Azioni</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {bookings.map((b) => (
+                  {allBookings.map((b) => (
                     <tr key={b.id} className="border-t border-white/5">
                       <td className="px-4 py-3 font-mono text-white/60">{b.id}</td>
+                      <td className="px-4 py-3"><TypeBadge type={b.type} /></td>
                       <td className="px-4 py-3">{b.guest}</td>
                       <td className="px-4 py-3 text-white/70">{b.stay}</td>
-                      <td className="px-4 py-3 text-white/60">{b.checkIn}</td>
-                      <td className="px-4 py-3 text-white/60">{b.checkOut}</td>
+                      <td className="px-4 py-3 text-white/60">{b.checkIn || "—"}</td>
+                      <td className="px-4 py-3 text-white/60">{b.checkOut || "—"}</td>
                       <td className="px-4 py-3 text-white/70">{b.guests}</td>
                       <td className="px-4 py-3">€{b.total}</td>
                       <td className="px-4 py-3"><StatusBadge status={b.status} /></td>
+                      <td className="px-4 py-3">
+                        {isStored(b.id) ? (
+                          <div className="flex gap-1.5">
+                            <button
+                              onClick={() => updateStoredBooking(b.id, { status: "Confermata" })}
+                              className="rounded-full border border-emerald-500/30 bg-emerald-500/15 px-2.5 py-0.5 text-xs font-medium text-emerald-300 transition hover:bg-emerald-500/25"
+                            >
+                              Conferma
+                            </button>
+                            <button
+                              onClick={() => updateStoredBooking(b.id, { status: "Annullata" })}
+                              className="rounded-full border border-rose-500/30 bg-rose-500/15 px-2.5 py-0.5 text-xs font-medium text-rose-300 transition hover:bg-rose-500/25"
+                            >
+                              Annulla
+                            </button>
+                          </div>
+                        ) : (
+                          <span className="text-xs text-white/35">Mock</span>
+                        )}
+                      </td>
                     </tr>
                   ))}
                 </tbody>

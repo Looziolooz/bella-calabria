@@ -9,7 +9,7 @@ export function generateStaticParams() {
 
 export function generateMetadata({ params }) {
   const stay = getStay(params.slug);
-  return { title: stay ? `${stay.name} · Bella Calabria` : "Alloggio" };
+  return { title: stay ? `${stay.name} · Calabria Escapes` : "Alloggio" };
 }
 
 export default function StayPage({ params }) {
@@ -101,6 +101,8 @@ export default function StayPage({ params }) {
             rating={stay.rating}
             reviews={stay.reviews}
             maxGuests={stay.guests}
+            stayName={stay.name}
+            location={stay.location}
           />
         </aside>
       </div>

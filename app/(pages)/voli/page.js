@@ -2,7 +2,7 @@ import FlightSearch from "@/components/FlightSearch";
 import { airports } from "@/lib/flights";
 
 export const metadata = {
-  title: "Voli per la Calabria · Bella Calabria",
+  title: "Voli per la Calabria · Calabria Escapes",
   description: "Cerca voli verso Lamezia Terme, Reggio Calabria e Crotone.",
 };
 

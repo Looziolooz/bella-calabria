@@ -1,7 +1,7 @@
 import StaysBrowser from "@/components/StaysBrowser";
 
 export const metadata = {
-  title: "Vacanze in Calabria · Bella Calabria",
+  title: "Vacanze in Calabria · Calabria Escapes",
   description: "Ville, case e B&B con vista mare e nei borghi della Calabria.",
 };
 

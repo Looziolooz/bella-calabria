@@ -2,7 +2,7 @@ import Link from "next/link";
 import { destinations } from "@/lib/destinations";
 
 export const metadata = {
-  title: "Destinazioni in Calabria · Bella Calabria",
+  title: "Destinazioni in Calabria · Calabria Escapes",
   description: "Mare, montagna, borghi e città: dove andare in Calabria.",
 };
 

@@ -1,4 +1,4 @@
-# Bella Calabria
+# Calabria Escapes
 
 Sito di viaggi per la Calabria — **Next.js (App Router) + Tailwind CSS**.
 Mare, montagna, borghi e sapori, con un'esperienza scroll animata in homepage
