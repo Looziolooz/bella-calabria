@@ -1,5 +1,12 @@
 # Calabria Escapes
 
+<!-- looz-design-credit -->
+> Progettato e sviluppato da **[LOoz.design](https://looz.design/?utm_source=github&utm_medium=referral&utm_campaign=readme)**: siti web, gestionali e agenti AI per piccole attività.
+> *Designed and built by LOoz.design: websites, management tools and AI agents for small businesses.*
+>
+> **Demo online:** https://bella-calabria.vercel.app/ · **Scheda del progetto · Case study:** https://looz.design/work/bella-calabria
+<!-- /looz-design-credit -->
+
 Sito di viaggi per la Calabria — **Next.js (App Router) + Tailwind CSS**.
 Mare, montagna, borghi e sapori, con un'esperienza scroll animata in homepage
 (GSAP + ScrollTrigger + Lenis) e funzionalità tipo Airbnb.
